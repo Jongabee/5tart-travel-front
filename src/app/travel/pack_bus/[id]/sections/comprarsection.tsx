@@ -10,7 +10,7 @@ interface CompraSectionProps {
     id: string;
     title: string;
     price: number;
-    activitiesTotalPrice: number; 
+    activitiesTotalPrice: number;
   };
   tourId: string;
 }
@@ -44,7 +44,9 @@ const CompraSection: React.FC<CompraSectionProps> = ({
 
   const toggleFavorite = async () => {
     try {
-      const url = `https://fivetart-travel-kafg.onrender.com/user/tour/favorite/${tourId}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/user/tour/favorite/${tourId}`;
+
+      // `https://fivetart-travel-kafg.onrender.com/user/tour/favorite/${tourId}`;
       if (favorited) {
         await axios.delete(url, {
           headers: {
@@ -81,7 +83,9 @@ const CompraSection: React.FC<CompraSectionProps> = ({
   const handleCheckout = async () => {
     try {
       const responss = await fetch(
-        `https://fivetart-travel-kafg.onrender.com/order/${busDetails.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/${busDetails.id}`,
+
+        // `https://fivetart-travel-kafg.onrender.com/order/${busDetails.id}`,
         {
           method: 'POST',
           headers: {
@@ -96,7 +100,9 @@ const CompraSection: React.FC<CompraSectionProps> = ({
       );
 
       const response = await axios.post(
-        'https://fivetart-travel-kafg.onrender.com/mercado-pago',
+        `${process.env.NEXT_PUBLIC_API_URL}/mercado-pago`,
+
+        // 'https://fivetart-travel-kafg.onrender.com/mercado-pago',
         {
           title: busDetails.title,
           price: totalPrice,
@@ -133,13 +139,15 @@ const CompraSection: React.FC<CompraSectionProps> = ({
   };
 
   useEffect(() => {
-    setTotalPrice((busDetails.price + busDetails.activitiesTotalPrice) * peopleCount);
+    setTotalPrice(
+      (busDetails.price + busDetails.activitiesTotalPrice) * peopleCount,
+    );
   }, [busDetails.price, busDetails.activitiesTotalPrice, peopleCount]);
 
   const handleQuantityChange = (newQuantity: number) => {
     setPeopleCount(newQuantity);
   };
-  
+
   if (userRole === 'agency') {
     return null;
   }
@@ -167,7 +175,8 @@ const CompraSection: React.FC<CompraSectionProps> = ({
           Precio por persona: ${busDetails.price}
         </p>
         <p className="text-sm md:text-md mb-2 md:mb-4">
-          Total Actividades: ${busDetails.activitiesTotalPrice.toLocaleString('es-ES')}
+          Total Actividades: $
+          {busDetails.activitiesTotalPrice.toLocaleString('es-ES')}
         </p>
         <div className="mb-2 md:mb-4 flex-col items-center justify-center">
           <label
